@@ -1,0 +1,323 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>ZeeFitness</title>
+  <meta name="description" content="Frontend-only fitness tool: BMI, Body Fat %, BMR (Mifflin-St Jeor), daily calories and macros. Copy-paste deploy." />
+  <style>
+    /* Simple clean styling */
+    :root{--card:#fff;--bg:#f3f6fb;--accent:#0b74da}
+    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial; background:var(--bg); margin:0; color:#111}
+    .wrap{max-width:920px;margin:28px auto;padding:20px}
+    header{display:flex;align-items:center;gap:12px}
+    h1{font-size:20px;margin:0}
+    .card{background:var(--card);border-radius:12px;padding:18px;box-shadow:0 6px 20px rgba(10,15,40,0.06);margin-top:16px}
+    .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+    label{font-size:13px;color:#333}
+    input[type="number"],select,input[type="text"]{width:100%;padding:8px;border-radius:8px;border:1px solid #e1e8f0}
+    .row{display:flex;gap:8px}
+    .btn{background:var(--accent);color:#E8E6F2;padding:10px 14px;border-radius:8px;border:none;cursor:pointer}
+    .result{margin-top:12px;padding:12px;border-radius:8px;background:#fbfdff;border:1px solid #e6f0ff}
+    small{color:#666}
+    .full{grid-column:1/3}
+    @media(max-width:720px){.grid{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+    <nav style="background:#2B2163; padding:15px 20px; font-family:sans-serif;">
+    <div style="color:white; font-size:20px; font-weight:bold; text-align:left;">
+      ZeeFitness Calculator 
+    </div>
+  </nav>
+    
+  <div class="wrap">
+    <header>
+      <div>
+        <h1 style="text-align:center">Transform your Health Journy</h1>
+        <h2>Track your health with <strong>BMI</strong>, <strong>body fat</strong>, <strong>BMR</strong>, <strong>calorie deficit</strong>, and <strong>macro calculators</strong>. Easy tools to calculate, plan nutrition, and reach fitness goals.</h2>
+      </div>
+    </header>
+
+    <section class="card">
+      <div class="grid">
+        <div>
+          <label>Gender</label>
+          <select id="gender"><option value="male">Male</option><option value="female">Female</option></select>
+        </div>
+
+        <div>
+          <label>Age (years)</label>
+          <input id="age" type="number" min="10" max="100" value="25"/>
+        </div>
+
+        <div>
+          <label>Weight</label>
+          <div class="row">
+            <input id="weight" type="number" min="20" max="300" value="70" />
+            <select id="weightUnit"><option value="kg">kg</option><option value="lb">lb</option></select>
+          </div>
+        </div>
+
+        <div>
+          <label>Height</label>
+          <div class="row">
+            <input id="height" type="number" min="80" max="230" value="175" />
+            <select id="heightUnit"><option value="cm">cm</option><option value="ft">ft/in</option></select>
+          </div>
+        </div>
+
+        <div id="ftinInputs" style="display:none">
+          <label>Feet / Inches</label>
+          <div class="row">
+            <input id="feet" type="number" min="3" max="8" placeholder="ft" />
+            <input id="inches" type="number" min="0" max="11" placeholder="in" />
+          </div>
+        </div>
+
+        <div>
+          <label>Activity Level</label>
+          <select id="activity">
+            <option value="1.2">Sedentary (little/no exercise)</option>
+            <option value="1.375">Light (1–3 days/week)</option>
+            <option value="1.55">Moderate (3–5 days/week)</option>
+            <option value="1.725">Active (6–7 days)</option>
+            <option value="1.9">Very active (hard training)</option>
+          </select>
+        </div>
+
+        <div>
+          <label>Goal</label>
+          <select id="goal">
+            <option value="maintain">Maintain weight</option>
+            <option value="lose">Lose weight</option>
+            <option value="gain">Gain weight</option>
+          </select>
+        </div>
+
+        <div>
+          <label>Weekly change (kg/week)</label>
+          <input id="weekly" type="number" step="0.1" value="0.25" />
+          <small>0.25kg ≈ 0.55 lb per week</small>
+        </div>
+
+        <div class="full">
+          <button id="calc" class="btn">Calculate</button>
+          <button id="reset" style="margin-left:8px;padding:10px;border-radius:8px;border:1px solid #ddd;background:#fff;cursor:pointer">Reset</button>
+        </div>
+
+        <div class="full result" id="output" style="display:none"></div>
+      </div>
+    </section>
+
+    <section style="margin-top:10px;font-size:13px;color:#444">
+        <h2>Why All Calculators Are Important</h2>
+<p style="font-size:16px;">
+  Using health and fitness calculators is important because they provide accurate data to guide your goals. A <strong>BMI calculator</strong> shows if your weight is in a healthy range, while a <strong>body fat calculator</strong> and <strong>body fat percentage calculator</strong> reveal how much of your weight is fat versus muscle. A <strong>BMR calculator</strong> tells you how many calories your body burns at rest, which is essential for planning nutrition, and a <strong>calorie deficit calculator</strong> helps set the right calorie intake for weight loss. Finally, a <strong>macro calculator</strong> ensures the correct balance of protein, fat, and carbs for energy and performance. Together, these tools make it easier to track progress, avoid guesswork, and achieve a healthier lifestyle.
+</p>
+ <img src="E:\cf/Health Fitness Calculator.png" alt="Health and Fitness Calculator" width="600" height="400" style="display:block; margin:auto;">
+      <h2>Calorie Deficit Calculator</h2>
+      <p style="font-size:16px;">If you are trying to lose weight, the first thing you should know is how to <strong>calculate calorie deficit</strong>. Many people also ask how to <calculate>calculate a calorie deficit</strong> or how to <strong>Calculate my calorie deficit</strong> in the easiest way possible. The answer is simple: you need to eat fewer calories than your body burns, and for that you can use an <strong>online calorie deficit calculator</strong>. With these tools, you can quickly calculate calorie deficit without confusion. Whether you are looking for a calorie deficit calculator free, a <strong>free calorie deficit calculator</strong>, or even a calories deficit calculator, the process is simple and effective. These calculators are designed to guide you in making the right food choices and adjusting your diet based on your body’s needs. If your main goal is fat loss, then a calorie deficit calculator to lose weight is the most practical solution. By using it, you can <strong>calorie deficit calculate</strong> accurately and stay on track toward a healthier lifestyle.</p>
+        <h2>BMI Calculator</h2>
+        <p style="font-size:16px;">A <strong>BMI calculator</strong> is one of the most effective tools to understand your body weight status in relation to your height. Many people search how to calculate BMI or calculate BMI how when they want to check if they fall into a healthy range. With an online tool, you can instantly <strong>calculate BMI</strong> without any complex formulas. There are different options available such as a BMI calculator women, BMI calculator men, or even a <strong>BMI calculator female</strong> designed to give accurate results based on gender-specific factors. Knowing the calculate of BMI helps you track your fitness, set weight goals, and maintain a healthy lifestyle.</p>
+        <h2>Body Fat Calculator</h2>
+        <p style="font-size:16px;">A <strong>body fat calculator</strong> is a simple yet powerful tool that helps you understand how much of your body weight is made up of fat. Many people often ask how to <strong>calculate body fat</strong> without going through complex methods, and that’s where online calculators make the process easier. With the help of a <strong>body fat percentage calculator</strong>, you can quickly get accurate results based on your height, weight, age, and gender. These tools also allow you to <strong>calculate body fat percentage</strong> to track fitness goals, improve diet plans, and monitor progress over time.</p>
+        <h2>BMR Calculator</h2>
+        <p style="font-size:16px;">A <strong>BMR calculator</strong> helps you discover how many calories your body burns at rest and is essential for planning diet and fitness goals; many people wonder <strong>calculate my BMR</strong> or simply <strong>calculate BMR</strong>, and a specialized <strong>BMR calculator for women</strong> adjusts for gender differences to give more accurate results, while a <strong>BMR calculator to lose weight</strong> can guide calorie targets so you achieve safe, effective weight loss.</p>
+        <h2>Macro Calculator</h2>
+        <p style="font-size:16px;">
+  A <strong>macro calculator</strong> is a powerful tool that helps you balance proteins, fats, and carbohydrates according to your fitness goals. Many people use a <strong>macros calculator</strong> to design personalized diet plans, and if your goal is fat reduction, then a <strong>macro calculator for weight loss</strong> is especially helpful. There are options like a <strong>free macro calculator</strong> or <strong>macro calculator free</strong> that make tracking nutrition simple and effective. By using these tools, you can easily <strong>calculate macros</strong> to reach your health and performance goals in a structured way.
+</p>
+    </section>
+  </div>
+
+  <script>
+    // Utility helpers
+    const $ = id => document.getElementById(id);
+    const weight = () => parseFloat($('weight').value) || 0;
+    const weightUnit = () => $('weightUnit').value;
+    const heightVal = () => parseFloat($('height').value) || 0;
+    const heightUnit = () => $('heightUnit').value;
+    const feet = () => parseFloat($('feet').value) || 0;
+    const inches = () => parseFloat($('inches').value) || 0;
+
+    // Toggle ft/in inputs
+    $('heightUnit').addEventListener('change', e=>{
+      if(e.target.value==='ft'){ $('ftinInputs').style.display='block'; $('height').style.display='none'; } 
+      else { $('ftinInputs').style.display='none'; $('height').style.display='block'; }
+    });
+
+    function toKg(w, unit){
+      if(unit==='kg') return w;
+      return w * 0.45359237;
+    }
+    function toCm(h, unit){
+      if(unit==='cm') return h;
+      // if ft: 'height' might be ignored and feet/inches used
+      return (feet()*12 + inches()) * 2.54;
+    }
+
+    function calcBMI(kg, cm){
+      // BMI = weight(kg) / (height(m))^2
+      const h = cm/100;
+      if(h<=0) return 0;
+      return kg / (h*h);
+    }
+
+    function bodyFatEstimate(gender, bmi, age){
+      // US Navy formula alternatives exist, but here a simple estimate from BMI (Deurenberg equation)
+      // BodyFat% = 1.20*BMI + 0.23*Age - 10.8*sex - 5.4; where sex = 1 for male, 0 for female
+      const sex = (gender==='male')?1:0;
+      return 1.20*bmi + 0.23*age - 10.8*sex - 5.4;
+    }
+
+    function bmrMifflin(gender, kg, cm, age){
+      // Mifflin-St Jeor
+      if(gender==='male'){
+        return 10*kg + 6.25*cm - 5*age + 5;
+      } else {
+        return 10*kg + 6.25*cm - 5*age - 161;
+      }
+    }
+
+    function caloriesForGoal(tdee, goal, weeklyChangeKg){
+      // 1 kg fat ~ 7700 kcal (approx). weeklyChangeKg*7700 = weekly kcal deficit/surplus.
+      const weeklyKcal = weeklyChangeKg * 7700;
+      const dailyAdjust = weeklyKcal / 7;
+      if(goal==='maintain') return tdee;
+      if(goal==='lose') return Math.max(1200, tdee - Math.abs(dailyAdjust)); // safety floor
+      if(goal==='gain') return tdee + Math.abs(dailyAdjust);
+      return tdee;
+    }
+
+    function macrosFromCalories(calories, kg){
+      // Protein: 1.6 g/kg (general); Fat: 25% calories; Carbs: remaining
+      const proteinG = Math.max(1.2*kg, 1.6*kg); // choose simple approach: 1.6 g/kg
+      const proteinCalories = proteinG * 4;
+      const fatCalories = calories * 0.25;
+      const fatG = fatCalories / 9;
+      const carbsCalories = Math.max(0, calories - proteinCalories - fatCalories);
+      const carbsG = carbsCalories / 4;
+      return {proteinG:proteinG.toFixed(1), fatG:fatG.toFixed(1), carbsG:carbsG.toFixed(1)};
+    }
+
+    function bmiCategory(bmi){
+      if(bmi<18.5) return 'Underweight';
+      if(bmi<25) return 'Normal';
+      if(bmi<30) return 'Overweight';
+      return 'Obese';
+    }
+
+    $('calc').addEventListener('click', ()=>{
+      // gather values
+      const g = $('gender').value;
+      const age = parseFloat($('age').value) || 0;
+      let w = parseFloat($('weight').value) || 0;
+      const wUnit = $('weightUnit').value;
+      let hcm = 0;
+      if($('heightUnit').value==='cm'){
+        hcm = parseFloat($('height').value) || 0;
+      } else {
+        hcm = toCm(null,'ft'); // uses feet/inches inputs
+      }
+
+      const kg = toKg(w, wUnit);
+      const bmi = calcBMI(kg, hcm);
+      const bf = bodyFatEstimate(g, bmi, age);
+      const bmr = bmrMifflin(g, kg, hcm, age);
+      const activity = parseFloat($('activity').value) || 1.2;
+      const tdee = bmr * activity;
+      const goal = $('goal').value;
+      const weekly = parseFloat($('weekly').value) || 0;
+      const calories = Math.round(caloriesForGoal(tdee, goal, weekly));
+      const macros = macrosFromCalories(calories, kg);
+
+      // render
+      const out = $('output');
+      out.style.display='block';
+      out.innerHTML = `
+        <strong>Results</strong>
+        <div style="margin-top:8px">
+          <strong>BMI:</strong> ${bmi.toFixed(1)} <small>(${bmiCategory(bmi)})</small><br>
+          <strong>Estimated Body Fat %:</strong> ${bf.toFixed(1)}% <small>(Deurenberg estimation)</small><br>
+          <strong>BMR (cal/day):</strong> ${Math.round(bmr)}<br>
+          <strong>TDEE (est):</strong> ${Math.round(tdee)} <small>(BMR × activity)</small><br>
+          <strong>Daily Calorie Target:</strong> ${calories} kcal/day <small>(${goal})</small><br>
+        </div>
+        <div style="margin-top:8px">
+          <strong>Macros (approx):</strong>
+          <div style="margin-top:6px">
+            Protein: <strong>${macros.proteinG} g</strong><br>
+            Fat: <strong>${macros.fatG} g</strong><br>
+            Carbs: <strong>${macros.carbsG} g</strong>
+          </div>
+        </div>
+        <div style="margin-top:8px;color:#666;font-size:13px">
+          <em>Note:</em> These are estimates for general guidance. For medical or tailored plans consult a professional.
+        </div>
+      `;
+      // Analytics-friendly: change URL hash so user can bookmark (no backend)
+      const params = new URLSearchParams({
+        g, age, w:Math.round(kg), h:Math.round(hcm), act:activity, goal, weekly
+      });
+      history.replaceState(null,null,'#'+params.toString());
+    });
+
+    $('reset').addEventListener('click', ()=>{
+      $('gender').value='male';$('age').value='25';$('weight').value='70';$('weightUnit').value='kg';
+      $('heightUnit').value='cm';$('height').value='175';$('feet').value='';$('inches').value='';
+      $('activity').value='1.55';$('goal').value='maintain';$('weekly').value='0.25';
+      $('output').style.display='none';
+      history.replaceState(null,null,window.location.pathname);
+    });
+
+    // If URL has hash params, populate fields (bookmarkable)
+    window.addEventListener('load', ()=>{
+      if(location.hash){
+        try{
+          const p = new URLSearchParams(location.hash.slice(1));
+          if(p.has('g')) $('gender').value = p.get('g');
+          if(p.has('age')) $('age').value = p.get('age');
+          if(p.has('w')) { $('weight').value = p.get('w'); $('weightUnit').value='kg'; }
+          if(p.has('h')) { $('height').value = p.get('h'); $('heightUnit').value='cm'; $('height').value=p.get('h'); }
+          if(p.has('act')) $('activity').value = p.get('act');
+          if(p.has('goal')) $('goal').value = p.get('goal');
+          if(p.has('weekly')) $('weekly').value = p.get('weekly');
+          // auto calc
+          document.getElementById('calc').click();
+        }catch(e){}
+      }
+    });
+  </script>
+  <footer style="background:#2D274C; color:#fff; padding:40px 20px; font-size:14px;">
+  <div style="max-width:1200px; margin:auto; display:flex; flex-wrap:wrap; justify-content:space-between;">
+    
+    <!-- Column 1 -->
+    <div style="flex:1; min-width:250px; margin:10px;">
+      <h3 style="color:white;">ZeeFitness Calculator </h3>
+      <p style="line-height:1.6;">
+        Providing tools like <strong>BMI</strong>, <strong>BMR</strong>, <strong>Calorie Deficit</strong>, 
+        <strong>Body Fat</strong> and <strong>Macro Calculators</strong> to make fitness tracking simple and effective.
+      </p>
+    </div>
+    
+    <!-- Column 3 -->
+    <div style="flex:1; min-width:250px; margin:10px;">
+      <h4 style="color:white;">Contact</h4>
+      <p>Email: info@yourwebsite.com</p>
+      <p>Phone: +123 456 7890</p>
+      <p>Follow us:</p>
+      <a href="https://facebook.com" target="_blank" style="color:#00bfff; margin-right:10px;">Facebook</a>
+      <a href="https://x.com/" target="_blank" style="color:#00bfff; margin-right:10px;">X</a>
+      <a href="https://instagram.com" target="_blank" style="color:#00bfff;">Instagram</a>
+    </div>
+    
+  </div>
+  <div style="text-align:center; padding-top:20px; border-top:1px solid #333; margin-top:20px;">
+    <p>&copy; 2025 Your Website. All Rights Reserved.</p>
+  </div>
+</footer>
+
+
+</body>
+</html>
